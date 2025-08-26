@@ -14,6 +14,9 @@ public class RepositoryContext : IdentityDbContext<ApplicationUser>
     {
     }
 
+    public DbSet<Movie> Movies { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
