@@ -1,68 +1,101 @@
-using Contracts.Repository;
-using MovieReview.Configuration;
+﻿using Contracts.Repository;
+using Contracts.Services;
+using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Repository;
+using Services;
 using Infrastructure.Middlewares;
+using Infrastructure.Auth;
+using MovieReview.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
-// Creates a new `WebApplicationBuilder` instance**, which:
-// - Sets up the default host (web server, logging, configuration, etc.)
-// - Loads configuration from `appsettings.json`, environment variables, command-line arguments, etc.
-// - Sets up dependency injection (DI)
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("SqlConnection");
 
+var connectionString = builder.Configuration.GetConnectionString("SqlConnection");
 builder.Services.AddDbContext<RepositoryContext>(options =>
     options.UseSqlServer(connectionString));
-// Registers MVC controllers to the DI container. This enables routing, model binding, and controller-based API endpoints.
-builder.Services.AddControllers();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-// This service makes your endpoints visible to Swagger/OpenAPI for documentation purposes, including those defined with:
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<RepositoryContext>()
+    .AddDefaultTokenProviders();
 
-// Registers Swagger generation into the DI container so you can produce OpenAPI documentation (used by tools like Swagger UI or Postman)
-builder.Services.AddSwaggerGen();
 
-// To register a service to the dependency injection (DI) we use the builder.Services collection.
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+var jwt = builder.Configuration.GetSection("Jwt").Get<JwtOptions>()!;
 
-// Lifetime Options:
-// AddSingleton<T>()	One instance for the entire app lifetime.
-// AddScoped<T>()	One instance per HTTP request.
-// AddTransient<T>()	New instance every time it's requested.
-
-// builder.Services.AddScoped<IMyService, MyService>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwt.Issuer,
+            ValidAudience = jwt.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 builder.Services.ConfigureServices(builder.Configuration);
 
-// Builds the `WebApplication` object using the services and configuration set up earlier. From here, middleware and HTTP pipeline logic are configured.
-var app = builder.Build();
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MovieReview API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer {token}'"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
-// Configure the HTTP request pipeline.
-// Conditionally enables Swagger UI and middleware only in development environment.
+
+var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
-    // Generates the Swagger JSON file.
     app.UseSwagger();
-    // Shows the Swagger UI frontend to interact with the API.
     app.UseSwaggerUI();
 }
 
-// Middleware that **redirects HTTP requests to HTTPS**, improving security by enforcing secure communication.
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-// Adds the authorization middleware to the pipeline.
-// This doesn't authenticate users but checks if authenticated users are authorized to access specific endpoints (e.g., based on [Authorize] attributes).
 app.UseAuthorization();
 
-// Maps the controller endpoints to the request pipeline.
-// -This tells the application to use **attribute routing** (e.g., `[Route("api/[controller]")]`) to match requests to controller actions.
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.MapControllers();
 
-// Starts the application and begins listening for HTTP requests.
+
 app.Run();

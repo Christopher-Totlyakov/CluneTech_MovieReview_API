@@ -18,7 +18,7 @@ public class ReviewsController : ControllerBase
         _reviewService = reviewService;
     }
 
-    [HttpGet("movie/{movieId}")]
+    [HttpGet("movie/{movieId}/reviews")]
     public async Task<IActionResult> GetReviewsForMovie(int movieId)
     {
         var reviews = await _reviewService.GetReviewsForMovieAsync(movieId);
@@ -26,7 +26,7 @@ public class ReviewsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] CreateReviewDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
