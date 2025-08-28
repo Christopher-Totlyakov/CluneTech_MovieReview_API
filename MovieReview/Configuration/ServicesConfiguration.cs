@@ -17,6 +17,8 @@ public static class ServicesConfiguration
 
         services.AddScoped<IMovieService, MovieService>();
         services.AddScoped<IReviewService, ReviewService>();
+
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
 
     }

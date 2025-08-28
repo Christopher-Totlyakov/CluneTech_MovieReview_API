@@ -28,6 +28,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{47FD580C-D061-49B1-806E-96013D1A634C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{BEF0862E-B788-42F6-883E-67493FA766AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6A3797C-BE8D-4780-BBE5-8FAED6301DA4} = {C6A3797C-BE8D-4780-BBE5-8FAED6301DA4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
