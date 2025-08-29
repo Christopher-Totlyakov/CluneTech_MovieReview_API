@@ -40,4 +40,19 @@ public class ReviewsController : ControllerBase
         var review = await _reviewService.CreateReviewAsync(userId, userName, dto);
         return Ok(review);
     }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPut("update/{reviewId}")]
+    public async Task<IActionResult> Update(int reviewId, [FromBody] UpdateReviewDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var userName = User.Identity?.Name;
+
+        var updatedReview = await _reviewService.UpdateReviewAsync(userId, userName, reviewId, dto);
+        return Ok(updatedReview);
+    }
 }

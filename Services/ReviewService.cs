@@ -60,6 +60,45 @@ public class ReviewService : IReviewService
             UserId = userId
         };
 
+        await _reviewRepository.CreateAsync(review);
+
+        return new ReviewDto
+        {
+            Id = review.Id,
+            Comment = review.Comment,
+            Rating = review.Rating,
+            UserName = userName ?? "Unknown",
+            MovieId = review.MovieId
+        };
+    }
+
+    public async Task<ReviewDto> UpdateReviewAsync(string userId, string userName, long reviewId, UpdateReviewDto dto)
+    {
+        if (reviewId <= 0)
+            throw new ValidationException("Invalid review id.");
+
+        var review = await _reviewRepository.GetByIdAsync(reviewId);
+        if (review == null)
+            throw new ValidationException("Review not found.");
+
+        if (review.UserId != userId)
+            throw new UnauthorizedAccessException("You can only update your own reviews.");
+
+        if (string.IsNullOrWhiteSpace(dto.Comment))
+            throw new ValidationException("Comment is required.");
+
+        if (dto.Comment.Length > 1000)
+            throw new ValidationException("Comment cannot exceed 1000 characters.");
+
+        if (dto.Rating < 1 || dto.Rating > 10)
+            throw new ValidationException("Rating must be between 1 and 10.");
+
+        review.Comment = dto.Comment;
+        review.Rating = dto.Rating;
+        review.UpdatedAt = DateTime.UtcNow;
+
+        await _reviewRepository.UpdateAsync(review);
+
         return new ReviewDto
         {
             Id = review.Id,

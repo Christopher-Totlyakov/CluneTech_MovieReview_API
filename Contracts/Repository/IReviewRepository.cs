@@ -16,5 +16,5 @@ public interface IReviewRepository : IRepositoryBase<Review>
     /// <summary>
     /// Gets all reviews for a specific movie.
     /// </summary>
-    Task<IEnumerable<Review>> GetReviewsForMovieAsync(int movieId);
+    Task<IEnumerable<Review>> GetReviewsForMovieAsync(long movieId);
 }

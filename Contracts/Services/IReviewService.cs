@@ -14,4 +14,5 @@ public interface IReviewService
 {
     Task<IEnumerable<ReviewDto>> GetReviewsForMovieAsync(int movieId);
     Task<ReviewDto> CreateReviewAsync(string userId, string userName, CreateReviewDto dto);
+    Task<ReviewDto> UpdateReviewAsync(string userId, string userName, long reviewId, UpdateReviewDto dto);
 }
