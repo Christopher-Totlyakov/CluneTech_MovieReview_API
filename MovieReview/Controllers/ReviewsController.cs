@@ -55,4 +55,18 @@ public class ReviewsController : ControllerBase
         var updatedReview = await _reviewService.UpdateReviewAsync(userId, userName, reviewId, dto);
         return Ok(updatedReview);
     }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpDelete("delete/{reviewId}")]
+    public async Task<IActionResult> Delete(int reviewId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
+
+        var success = await _reviewService.DeleteReviewAsync(userId, reviewId);
+        if (!success) return NotFound();
+
+        return NoContent();
+    }
+
 }

@@ -108,4 +108,21 @@ public class ReviewService : IReviewService
             MovieId = review.MovieId
         };
     }
+
+    public async Task<bool> DeleteReviewAsync(string userId, long reviewId)
+    {
+        if (reviewId <= 0)
+            throw new ValidationException("Invalid review id.");
+
+        var review = await _reviewRepository.GetByIdAsync(reviewId);
+        if (review == null)
+            throw new ValidationException("Review not found.");
+
+        if (review.UserId != userId)
+            throw new UnauthorizedAccessException("You can only delete your own reviews.");
+
+        await _reviewRepository.DeleteAsync(review);
+        return true;
+    }
+
 }
