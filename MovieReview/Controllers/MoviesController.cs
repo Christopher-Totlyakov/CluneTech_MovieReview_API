@@ -33,7 +33,6 @@ public class MoviesController : ControllerBase
         return Ok(movie);
     }
 
-    //[Authorize(AuthenticationSchemes = "Bearer")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] CreateMovieDto dto)
@@ -43,7 +42,7 @@ public class MoviesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = movie.Id }, movie);
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("update/{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] CreateMovieDto dto)
     {
@@ -53,7 +52,7 @@ public class MoviesController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {

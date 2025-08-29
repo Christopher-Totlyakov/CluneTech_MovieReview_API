@@ -13,5 +13,5 @@ namespace Contracts.Services;
 public interface IReviewService
 {
     Task<IEnumerable<ReviewDto>> GetReviewsForMovieAsync(int movieId);
-    Task<ReviewDto> CreateReviewAsync(string userId, CreateReviewDto dto);
+    Task<ReviewDto> CreateReviewAsync(string userId, string userName, CreateReviewDto dto);
 }

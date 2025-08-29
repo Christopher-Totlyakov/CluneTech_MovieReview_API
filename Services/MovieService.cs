@@ -59,7 +59,7 @@ public class MovieService : IMovieService
 
     public async Task<MovieDto> CreateMovieAsync(CreateMovieDto dto)
     {
-        // ✅ Валидации
+
         if (string.IsNullOrWhiteSpace(dto.Title))
             throw new ValidationException("Title is required.");
 
@@ -101,7 +101,7 @@ public class MovieService : IMovieService
         var movie = await _movieRepository.GetByIdAsync(id);
         if (movie == null) return false;
 
-        // ✅ Валидации
+
         if (string.IsNullOrWhiteSpace(dto.Title))
             throw new ValidationException("Title is required.");
 

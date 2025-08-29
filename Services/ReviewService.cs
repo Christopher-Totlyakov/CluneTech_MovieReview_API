@@ -1,6 +1,7 @@
 ﻿using Contracts.Repository;
 using Contracts.Services;
 using Entities;
+using Microsoft.AspNetCore.Identity;
 using Models.Review;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -34,7 +35,7 @@ public class ReviewService : IReviewService
         });
     }
 
-    public async Task<ReviewDto> CreateReviewAsync(string userId, CreateReviewDto dto)
+    public async Task<ReviewDto> CreateReviewAsync(string userId, string userName, CreateReviewDto dto)
     {
         if (string.IsNullOrWhiteSpace(userId))
             throw new ValidationException("User is required.");
@@ -59,14 +60,12 @@ public class ReviewService : IReviewService
             UserId = userId
         };
 
-        await _reviewRepository.CreateAsync(review);
-
         return new ReviewDto
         {
             Id = review.Id,
             Comment = review.Comment,
             Rating = review.Rating,
-            UserName = review.User?.UserName ?? "Unknown",
+            UserName = userName ?? "Unknown",
             MovieId = review.MovieId
         };
     }

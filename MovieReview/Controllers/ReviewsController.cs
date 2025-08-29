@@ -1,4 +1,5 @@
 ﻿using Contracts.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Review;
@@ -25,7 +26,7 @@ public class ReviewsController : ControllerBase
         return Ok(reviews);
     }
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] CreateReviewDto dto)
     {
@@ -34,7 +35,9 @@ public class ReviewsController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
-        var review = await _reviewService.CreateReviewAsync(userId, dto);
+        var userName = User.Identity?.Name;
+
+        var review = await _reviewService.CreateReviewAsync(userId, userName, dto);
         return Ok(review);
     }
 }
