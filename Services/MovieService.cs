@@ -93,7 +93,7 @@ public class MovieService : IMovieService
         };
     }
 
-    public async Task<bool> UpdateMovieAsync(int id, CreateMovieDto dto)
+    public async Task<bool> UpdateMovieAsync(long id, CreateMovieDto dto)
     {
         if (id <= 0)
             throw new ValidationException("Invalid movie id.");
@@ -119,7 +119,7 @@ public class MovieService : IMovieService
         return true;
     }
 
-    public async Task<bool> DeleteMovieAsync(int id)
+    public async Task<bool> DeleteMovieAsync(long id)
     {
         if (id <= 0)
             throw new ValidationException("Invalid movie id.");

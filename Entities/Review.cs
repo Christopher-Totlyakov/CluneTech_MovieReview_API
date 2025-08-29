@@ -18,7 +18,7 @@ public class Review
     /// Primary Key
     /// </summary>
     [Key]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// Review text
@@ -47,7 +47,7 @@ public class Review
     /// Foreign Key → Movie
     /// </summary>
     [ForeignKey("Movie")]
-    public int MovieId { get; set; }
+    public long MovieId { get; set; }
     public Movie Movie { get; set; }
 
     /// <summary>

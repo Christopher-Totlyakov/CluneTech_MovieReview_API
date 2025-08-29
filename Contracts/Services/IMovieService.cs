@@ -15,6 +15,6 @@ public interface IMovieService
     Task<IEnumerable<MovieDto>> GetAllMoviesAsync();
     Task<MovieDto?> GetMovieByIdAsync(int id);
     Task<MovieDto> CreateMovieAsync(CreateMovieDto dto);
-    Task<bool> UpdateMovieAsync(int id, CreateMovieDto dto);
-    Task<bool> DeleteMovieAsync(int id);
+    Task<bool> UpdateMovieAsync(long id, CreateMovieDto dto);
+    Task<bool> DeleteMovieAsync(long id);
 }

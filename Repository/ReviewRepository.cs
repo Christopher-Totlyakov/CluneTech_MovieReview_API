@@ -16,12 +16,12 @@ namespace Repository;
 public class ReviewRepository : RepositoryBase<Review>, IReviewRepository
 {
     protected readonly RepositoryContext _context;
-    public ReviewRepository(RepositoryContext context) : base(context) 
+    public ReviewRepository(RepositoryContext context) : base(context)
     {
         _context = context;
     }
 
-    public async Task<IEnumerable<Review>> GetReviewsForMovieAsync(int movieId)
+    public async Task<IEnumerable<Review>> GetReviewsForMovieAsync(long movieId)
     {
         return await _context.Reviews
             .Where(r => r.MovieId == movieId)

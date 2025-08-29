@@ -54,7 +54,7 @@ public class MoviesController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete("delete/{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(long id)
     {
         var result = await _movieService.DeleteMovieAsync(id);
         if (!result) return NotFound();
