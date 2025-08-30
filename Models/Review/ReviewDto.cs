@@ -15,5 +15,6 @@ public class ReviewDto
     public string Comment { get; set; } = string.Empty;
     public int Rating { get; set; }
     public string UserName { get; set; } = string.Empty;
-    public long MovieId { get; set; }
+    public long? MovieId { get; set; }
+    public long? SeriesId { get; set; }
 }
