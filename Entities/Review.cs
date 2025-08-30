@@ -44,14 +44,21 @@ public class Review
     public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
-    /// Foreign Key → Movie
+    /// Foreign Key Movie
     /// </summary>
     [ForeignKey("Movie")]
-    public long MovieId { get; set; }
-    public Movie Movie { get; set; }
+    public long? MovieId { get; set; }
+    public Movie? Movie { get; set; }
 
     /// <summary>
-    /// Foreign Key → User
+    /// Foreign Key Series
+    /// </summary>
+    [ForeignKey("Series")]
+    public long? SeriesId { get; set; }
+    public Series? Series { get; set; }
+
+    /// <summary>
+    /// Foreign Key User
     /// </summary>
     [ForeignKey("User")]
     public string? UserId { get; set; }
