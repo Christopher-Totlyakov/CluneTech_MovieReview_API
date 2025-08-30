@@ -14,12 +14,16 @@ public static class ServicesConfiguration
     {
         services.AddScoped<IMovieRepository, MovieRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
+        services.AddScoped<ISeriesRepository, SeriesRepository>();
+        services.AddScoped<ISeasonRepository, SeasonRepository>();
+        services.AddScoped<IEpisodeRepository, EpisodeRepository>();
+
 
         services.AddScoped<IMovieService, MovieService>();
         services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<ISeriesService, SeriesService>();
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
-
     }
 }
