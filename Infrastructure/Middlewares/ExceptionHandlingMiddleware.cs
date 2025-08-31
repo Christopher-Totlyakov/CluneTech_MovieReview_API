@@ -37,7 +37,7 @@ namespace Infrastructure.Middlewares
                 ValidationException => (int)HttpStatusCode.BadRequest,
                 KeyNotFoundException => (int)HttpStatusCode.NotFound,
                 ArgumentException => (int)HttpStatusCode.BadRequest,
-                _ => (int)HttpStatusCode.InternalServerError
+                _ => (int)HttpStatusCode.BadRequest
             };
 
             var response = new { message = exception.Message, statusCode = context.Response.StatusCode };
