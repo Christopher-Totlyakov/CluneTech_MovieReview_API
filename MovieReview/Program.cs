@@ -12,7 +12,8 @@ using MovieReview.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
+using Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,6 +85,12 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        await services.SeedUsersAndReviewsAsync<RepositoryContext>();
+    }
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
