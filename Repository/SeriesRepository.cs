@@ -18,6 +18,16 @@ public class SeriesRepository : RepositoryBase<Series>, ISeriesRepository
         _context = context;
     }
 
+    public async Task<List<Series>> GetAllWithReviewsAsync()
+    {
+        return await _context.Series
+            .Include(s => s.Reviews)
+                .ThenInclude(r => r.User)
+            .Include(s => s.Seasons)
+                .ThenInclude(season => season.Episodes)
+            .ToListAsync();
+    }
+
     public async Task<Series> GetSeriesWithReviewsAsync(long id)
     {
         return await _context.Series

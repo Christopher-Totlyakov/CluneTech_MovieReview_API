@@ -30,7 +30,8 @@ public class SeriesService : ISeriesService
 
     public async Task<IEnumerable<SeriesDto>> GetAllSeriesAsync()
     {
-        var seriesList = await _seriesRepository.GetAllAsync();
+        var seriesList = await _seriesRepository.GetAllWithReviewsAsync();
+
         return seriesList.Select(s => new SeriesDto
         {
             Id = s.Id,
@@ -38,7 +39,35 @@ public class SeriesService : ISeriesService
             Description = s.Description,
             Genre = s.Genre,
             ReleaseDate = s.ReleaseDate,
-            AverageRating = s.AverageRating
+            PosterUrl = s.PosterUrl,
+            AverageRating = s.AverageRating,
+            Seasons = s.Seasons.Select(season => new SeasonDto
+            {
+                Id = season.Id,
+                SeasonNumber = season.SeasonNumber,
+                Title = season.Title,
+                Description = season.Description,
+                ReleaseDate = season.ReleaseDate,
+                PosterUrl = season.PosterUrl,
+                Episodes = season.Episodes.Select(ep => new EpisodeDto
+                {
+                    Id = ep.Id,
+                    EpisodeNumber = ep.EpisodeNumber,
+                    Title = ep.Title,
+                    AirDate = ep.AirDate,
+                    DurationMinutes = ep.DurationMinutes,
+                    Description = ep.Description
+                }).ToList()
+            }).ToList(),
+            Reviews = s.Reviews.Select(r => new ReviewDto
+            {
+                Id = r.Id,
+                Comment = r.Comment,
+                Rating = r.Rating,
+                UserName = r.User?.UserName ?? "Unknown",
+                MovieId = r.MovieId,
+                SeriesId = r.SeriesId
+            }).ToList()
         });
     }
 
@@ -158,7 +187,27 @@ public class SeriesService : ISeriesService
             Description = series.Description,
             Genre = series.Genre,
             ReleaseDate = series.ReleaseDate,
-            AverageRating = series.AverageRating
+            PosterUrl = series.PosterUrl,
+            AverageRating = series.AverageRating,
+            Seasons = series.Seasons.Select(season => new SeasonDto
+            {
+                Id = season.Id,
+                SeasonNumber = season.SeasonNumber,
+                Title = season.Title,
+                Description = season.Description,
+                ReleaseDate = season.ReleaseDate,
+                PosterUrl = season.PosterUrl,
+                Episodes = season.Episodes.Select(episode => new EpisodeDto
+                {
+                    Id = episode.Id,
+                    EpisodeNumber = episode.EpisodeNumber,
+                    Title = episode.Title,
+                    AirDate = episode.AirDate,
+                    DurationMinutes = episode.DurationMinutes,
+                    Description = episode.Description
+                }).ToList()
+            }).ToList(),
+            Reviews = new List<ReviewDto>()
         };
     }
 
