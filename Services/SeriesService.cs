@@ -118,21 +118,6 @@ public class SeriesService : ISeriesService
 
     public async Task<SeriesDto> CreateSeriesAsync(CreateSeriesDto createSeriesDto)
     {
-        if (string.IsNullOrWhiteSpace(createSeriesDto.Title))
-            throw new ValidationException("Title is required.");
-
-        if (createSeriesDto.Title.Length > 200)
-            throw new ValidationException("Title cannot exceed 200 characters.");
-
-        if (!string.IsNullOrWhiteSpace(createSeriesDto.Description) && createSeriesDto.Description.Length > 2000)
-            throw new ValidationException("Description cannot exceed 2000 characters.");
-
-        if (string.IsNullOrWhiteSpace(createSeriesDto.Genre))
-            throw new ValidationException("Genre is required.");
-
-        if (createSeriesDto.ReleaseDate == default)
-            throw new ValidationException("Release date is required.");
-
         var series = new Series
         {
             Title = createSeriesDto.Title,
@@ -144,9 +129,6 @@ public class SeriesService : ISeriesService
 
         foreach (var seasonDto in createSeriesDto.Seasons)
         {
-            if (seasonDto.SeasonNumber < 1)
-                throw new ValidationException("Season number must be at least 1.");
-
             var season = new Season
             {
                 SeasonNumber = seasonDto.SeasonNumber,
@@ -158,12 +140,6 @@ public class SeriesService : ISeriesService
 
             foreach (var episodeDto in seasonDto.Episodes)
             {
-                if (episodeDto.EpisodeNumber < 1)
-                    throw new ValidationException("Episode number must be at least 1.");
-
-                if (episodeDto.DurationMinutes < 1)
-                    throw new ValidationException("Episode duration must be at least 1 minute.");
-
                 var episode = new Episode
                 {
                     EpisodeNumber = episodeDto.EpisodeNumber,
@@ -211,25 +187,13 @@ public class SeriesService : ISeriesService
         };
     }
 
-    public async Task<bool> UpdateSeriesAsync(long id, CreateSeriesDto createSeriesDto)
+    public async Task<bool> UpdateSeriesAsync(long id, UpdateSeriesDto createSeriesDto)
     {
         if (id <= 0)
             throw new ValidationException("Invalid series id.");
 
         var series = await _seriesRepository.GetByIdAsync(id);
         if (series == null) return false;
-
-        if (string.IsNullOrWhiteSpace(createSeriesDto.Title))
-            throw new ValidationException("Title is required.");
-
-        if (createSeriesDto.Title.Length > 200)
-            throw new ValidationException("Title cannot exceed 200 characters.");
-
-        if (!string.IsNullOrWhiteSpace(createSeriesDto.Description) && createSeriesDto.Description.Length > 2000)
-            throw new ValidationException("Description cannot exceed 2000 characters.");
-
-        if (string.IsNullOrWhiteSpace(createSeriesDto.Genre))
-            throw new ValidationException("Genre is required.");
 
         series.Title = createSeriesDto.Title;
         series.Description = createSeriesDto.Description;
@@ -257,7 +221,6 @@ public class SeriesService : ISeriesService
     public async Task<SeasonDto?> AddSeasonAsync(long seriesId, CreateSeasonDto createSeasonDto)
     {
         if (seriesId <= 0) throw new ValidationException("Invalid series id.");
-        if (createSeasonDto.SeasonNumber < 1) throw new ValidationException("Season number must be >= 1.");
 
         var series = await _seriesRepository.GetSeriesWithSeasonsAndEpisodesAsync(seriesId);
         if (series == null) return null;
@@ -277,12 +240,6 @@ public class SeriesService : ISeriesService
 
         foreach (var createEpisodeDto in createSeasonDto.Episodes)
         {
-            if (createEpisodeDto.EpisodeNumber < 1)
-                throw new ValidationException("Episode number must be at least 1.");
-
-            if (createEpisodeDto.DurationMinutes < 1)
-                throw new ValidationException("Episode duration must be at least 1 minute.");
-
             if (season.Episodes.Any(s => s.EpisodeNumber == createEpisodeDto.EpisodeNumber))
                 throw new ValidationException($"Episode {createEpisodeDto.EpisodeNumber} already exists for this season.");
 
@@ -318,13 +275,11 @@ public class SeriesService : ISeriesService
                 Description = ep.Description
             }).ToList()
         };
-
     }
 
     public async Task<bool> UpdateSeasonAsync(long seasonId, CreateSeasonDto createSeasonDto)
     {
         if (seasonId <= 0) throw new ValidationException("Invalid season id.");
-        if (createSeasonDto.SeasonNumber < 1) throw new ValidationException("Season number must be >= 1.");
 
         var season = await _seasonRepository.GetByIdWithEpisodesAsync(seasonId);
         if (season == null) return false;
@@ -337,11 +292,6 @@ public class SeriesService : ISeriesService
 
         foreach (var episodsDto in createSeasonDto.Episodes)
         {
-            if (episodsDto.EpisodeNumber < 1)
-                throw new ValidationException("Episode number must be at least 1.");
-            if (episodsDto.DurationMinutes < 1)
-                throw new ValidationException("Episode duration must be at least 1 minute.");
-
             var existingEpisode = season.Episodes.FirstOrDefault(e => e.EpisodeNumber == episodsDto.EpisodeNumber);
 
             if (existingEpisode != null)
@@ -385,11 +335,6 @@ public class SeriesService : ISeriesService
     {
         if (seasonId <= 0)
             throw new ValidationException("Invalid season id.");
-        if (createEpisodeDto.EpisodeNumber < 1)
-            throw new ValidationException("Episode number must be >= 1.");
-        if (createEpisodeDto.DurationMinutes < 1)
-            throw new ValidationException("Episode duration must be >= 1.");
-
  
         var season = await _seasonRepository.GetByIdWithEpisodesAsync(seasonId);
 
@@ -426,10 +371,6 @@ public class SeriesService : ISeriesService
     {
         if (episodeId <= 0)
             throw new ValidationException("Invalid episode id.");
-        if (createEpisodeDto.EpisodeNumber < 1)
-            throw new ValidationException("Episode number must be >= 1.");
-        if (createEpisodeDto.DurationMinutes < 1)
-            throw new ValidationException("Episode duration must be >= 1.");
 
         var episode = await _episodeRepository.GetByIdAsync(episodeId);
         if (episode == null)

@@ -44,7 +44,7 @@ public class SeriesController : ControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("update/{id}")]
-    public async Task<IActionResult> Update(long id, [FromBody] CreateSeriesDto dto)
+    public async Task<IActionResult> Update(long id, [FromBody] UpdateSeriesDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -68,6 +68,8 @@ public class SeriesController : ControllerBase
     [HttpPost("{seriesId}/seasons/add")]
     public async Task<IActionResult> AddSeason(long seriesId, [FromBody] CreateSeasonDto dto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var season = await _seriesService.AddSeasonAsync(seriesId, dto);
         if (season == null) return NotFound();
         return Ok(season);
@@ -77,6 +79,8 @@ public class SeriesController : ControllerBase
     [HttpPut("seasons/update/{seasonId}")]
     public async Task<IActionResult> UpdateSeason(long seasonId, [FromBody] CreateSeasonDto dto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var result = await _seriesService.UpdateSeasonAsync(seasonId, dto);
         if (!result) return NotFound();
         return NoContent();
@@ -95,6 +99,8 @@ public class SeriesController : ControllerBase
     [HttpPost("seasons/{seasonId}/episodes/add")]
     public async Task<IActionResult> AddEpisode(long seasonId, [FromBody] CreateEpisodeDto dto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var episode = await _seriesService.AddEpisodeAsync(seasonId, dto);
         if (episode == null) return NotFound();
         return Ok(episode);
@@ -104,6 +110,8 @@ public class SeriesController : ControllerBase
     [HttpPut("episodes/update/{episodeId}")]
     public async Task<IActionResult> UpdateEpisode(long episodeId, [FromBody] CreateEpisodeDto dto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var result = await _seriesService.UpdateEpisodeAsync(episodeId, dto);
         if (!result) return NotFound();
         return NoContent();
