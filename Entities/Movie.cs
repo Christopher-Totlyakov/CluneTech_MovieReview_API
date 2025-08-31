@@ -65,6 +65,8 @@ public class Movie
     /// URL to movie poster image
     /// </summary>
     [MaxLength(500)]
+    [RegularExpression(@"^(https?:\/\/)?([\w\-]+\.)+[a-zA-Z]{2,}(\/\S*)+\.(jpg|jpeg|png|gif|webp)$",
+    ErrorMessage = "PosterUrl must be a valid image URL (.jpg, .jpeg, .png, .gif, .webp).")]
     public string? PosterUrl { get; set; }
 
     /// <summary>
