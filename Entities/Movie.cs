@@ -18,28 +18,28 @@ public class Movie
     public long Id { get; set; }
 
     [Required]
-    [MaxLength(200)]
+    [MaxLength(ValidationConstants.TitleMaxLength)]
     public string Title { get; set; } = string.Empty;
 
-    [MaxLength(2000)]
+    [MaxLength(ValidationConstants.DescriptionMaxLength)]
     public string? Description { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(ValidationConstants.GenreMaxLength)]
     public string Genre { get; set; } = string.Empty;
 
-    [MaxLength(100)]
+    [MaxLength(ValidationConstants.DirectorMaxLength)]
     public string? Director { get; set; }
 
     public DateTime ReleaseDate { get; set; }
 
-    [Range(1, 600)]
+    [Range(ValidationConstants.DurationMin, ValidationConstants.DurationMax)]
     public int DurationMinutes { get; set; }
 
-    [Range(0, 10)]
+    [Range(ValidationConstants.RatingMin, ValidationConstants.RatingMax)]
     public double AverageRating { get; set; }
 
-    [MaxLength(500)]
-    [RegularExpression(@"^(https?:\/\/)?([\w\-]+\.)+[a-zA-Z]{2,}(\/\S*)+\.(jpg|jpeg|png|gif|webp)(\?.*)?$",
+    [MaxLength(ValidationConstants.UrlMaxLength)]
+    [RegularExpression(ValidationConstants.ImageUrlRegex,
     ErrorMessage = "PosterUrl must be a valid image URL (.jpg, .jpeg, .png, .gif, .webp).")]
     public string? PosterUrl { get; set; }
 

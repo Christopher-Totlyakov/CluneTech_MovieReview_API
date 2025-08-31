@@ -16,19 +16,19 @@ public class Episode
     [Key]
     public long Id { get; set; }
 
-    [Range(1, 1000)]
+    [Range(ValidationConstants.EpisodeNumberMin, ValidationConstants.EpisodeNumberMax)]
     public int EpisodeNumber { get; set; }
 
     [Required]
-    [MaxLength(200)]
+    [MaxLength(ValidationConstants.TitleMaxLength)]
     public string Title { get; set; } = string.Empty;
 
     public DateTime AirDate { get; set; }
 
-    [Range(1, 600)]
+    [Range(ValidationConstants.DurationMin, ValidationConstants.DurationMax)]
     public int DurationMinutes { get; set; }
 
-    [MaxLength(2000)]
+    [MaxLength(ValidationConstants.DescriptionMaxLength)]
     public string? Description { get; set; }
 
     [ForeignKey("Season")]

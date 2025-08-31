@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,9 +11,11 @@ namespace Models.Review;
 public class UpdateReviewDto
 {
     [Required(ErrorMessage = "Comment is required.")]
-    [StringLength(1000, ErrorMessage = "Comment cannot exceed 1000 characters.")]
+    [StringLength(ValidationConstants.ReviewCommentMaxLength,
+        ErrorMessage = "Comment cannot exceed {1} characters.")]
     public string Comment { get; set; } = string.Empty;
 
-    [Range(1, 10, ErrorMessage = "Rating must be between 1 and 10.")]
+    [Range(ValidationConstants.ReviewRatingMin, ValidationConstants.ReviewRatingMax,
+        ErrorMessage = "Rating must be between {1} and {2}.")]
     public int Rating { get; set; }
 }

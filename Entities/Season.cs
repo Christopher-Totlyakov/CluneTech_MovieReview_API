@@ -16,20 +16,20 @@ public class Season
     [Key]
     public long Id { get; set; }
 
-    [Range(1, 100)]
+    [Range(ValidationConstants.SeasonNumberMin, ValidationConstants.SeasonNumberMax)]
     public int SeasonNumber { get; set; }
 
-    [MaxLength(200)]
+    [MaxLength(ValidationConstants.TitleMaxLength)]
     public string? Title { get; set; }
 
-    [MaxLength(2000)]
+    [MaxLength(ValidationConstants.DescriptionMaxLength)]
     public string? Description { get; set; }
 
     public DateTime? ReleaseDate { get; set; }
 
-    [MaxLength(500)]
-    [RegularExpression(@"^(https?:\/\/)?([\w\-]+\.)+[a-zA-Z]{2,}(\/\S*)+\.(jpg|jpeg|png|gif|webp)(\?.*)?$",
-    ErrorMessage = "PosterUrl must be a valid image URL (.jpg, .jpeg, .png, .gif, .webp).")]
+    [MaxLength(ValidationConstants.UrlMaxLength)]
+    [RegularExpression(ValidationConstants.ImageUrlRegex,
+        ErrorMessage = "PosterUrl must be a valid image URL (.jpg, .jpeg, .png, .gif, .webp).")]
     public string? PosterUrl { get; set; }
 
     [ForeignKey("Series")]

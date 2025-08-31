@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace Models.Auth;
 public class RegisterDto
 {
     [Required(ErrorMessage = "User name is required.")]
-    [StringLength(50, MinimumLength = 3, ErrorMessage = "User name must be between 3 and 50 characters.")]
+    [StringLength(ValidationConstants.UserNameMaxLength, MinimumLength = ValidationConstants.UserNameMinLength, 
+            ErrorMessage = "User name must be between {2} and {1} characters.")]
     public string UserName { get; set; } = null!;
 
     [Required(ErrorMessage = "Email is required.")]
@@ -17,6 +19,7 @@ public class RegisterDto
     public string Email { get; set; } = null!;
 
     [Required(ErrorMessage = "Password is required.")]
-    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters.")]
+    [StringLength(ValidationConstants.PasswordMaxLength, MinimumLength = ValidationConstants.PasswordMinLength,
+        ErrorMessage = "Password must be between {2} and {1} characters.")]
     public string Password { get; set; } = null!;
 }

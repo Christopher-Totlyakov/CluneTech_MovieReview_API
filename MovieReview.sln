@@ -22,6 +22,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastru
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{9133DD49-8504-458A-BEE0-3EA69E981527}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EF356D8A-7741-4CCD-BC33-695185D9DAA2} = {EF356D8A-7741-4CCD-BC33-695185D9DAA2}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{7D179FAE-EC5E-43BB-B9B4-33B417E0D8EE}"
 EndProject

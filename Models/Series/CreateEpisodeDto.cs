@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,25 +10,24 @@ namespace Models.Series;
 
 public class CreateEpisodeDto
 {
-
-    [Range(1, 1000, ErrorMessage = "Episode number must be between 1 and 1000.")]
+    [Range(ValidationConstants.EpisodeNumberMin, ValidationConstants.EpisodeNumberMax,
+            ErrorMessage = "Episode number must be between {1} and {2}.")]
     public int EpisodeNumber { get; set; }
 
-
     [Required(ErrorMessage = "Title is required.")]
-    [StringLength(200, MinimumLength = 1, ErrorMessage = "Title must be between 1 and 200 characters.")]
+    [StringLength(ValidationConstants.TitleMaxLength, MinimumLength = ValidationConstants.TitleMinLength,
+        ErrorMessage = "Title must be between {2} and {1} characters.")]
     public string Title { get; set; } = string.Empty;
-
 
     [Required(ErrorMessage = "Air date is required.")]
     [DataType(DataType.Date, ErrorMessage = "Air date must be a valid date.")]
     public DateTime AirDate { get; set; }
 
-
-    [Range(1, 600, ErrorMessage = "Duration must be between 1 and 600 minutes.")]
+    [Range(ValidationConstants.DurationMin, ValidationConstants.DurationMax,
+        ErrorMessage = "Duration must be between {1} and {2} minutes.")]
     public int DurationMinutes { get; set; }
 
-
-    [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters.")]
+    [StringLength(ValidationConstants.DescriptionMaxLength,
+        ErrorMessage = "Description cannot exceed {1} characters.")]
     public string? Description { get; set; }
 }
