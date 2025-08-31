@@ -9,12 +9,16 @@ using System.Threading.Tasks;
 namespace Contracts.Repository;
 
 /// <summary>
-/// Defines repository methods for working with reviews.
+/// Defines repository methods for working with <see cref="Review"/> entities.
 /// </summary>
 public interface IReviewRepository : IRepositoryBase<Review>
 {
     /// <summary>
-    /// Gets all reviews for a specific movie.
+    /// Retrieves all reviews associated with a specific movie.
     /// </summary>
+    /// <param name="movieId">The unique identifier of the movie.</param>
+    /// <returns>
+    /// A collection of <see cref="Review"/> objects for the specified movie.
+    /// </returns>
     Task<IEnumerable<Review>> GetReviewsForMovieAsync(long movieId);
 }

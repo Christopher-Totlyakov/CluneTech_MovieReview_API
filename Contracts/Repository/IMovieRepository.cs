@@ -9,13 +9,16 @@ using System.Threading.Tasks;
 namespace Contracts.Repository;
 
 /// <summary>
-/// Defines repository methods for working with movies.
+/// Defines repository methods for working with <see cref="Movie"/> entities.
 /// </summary>
 public interface IMovieRepository : IRepositoryBase<Movie>
 {
     /// <summary>
-    /// Gets a movie including its reviews by ID.
+    /// Retrieves a movie by its unique identifier, including its associated reviews.
     /// </summary>
+    /// <param name="movieId">The unique identifier of the movie.</param>
+    /// <returns>
+    /// The <see cref="Movie"/> with its reviews if found; otherwise, null.
+    /// </returns>
     Task<Movie?> GetMovieWithReviewsAsync(int movieId);
 }
-
