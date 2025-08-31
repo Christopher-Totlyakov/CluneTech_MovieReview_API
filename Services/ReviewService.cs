@@ -40,18 +40,6 @@ public class ReviewService : IReviewService
         if (string.IsNullOrWhiteSpace(userId))
             throw new ValidationException("User is required.");
 
-        if (string.IsNullOrWhiteSpace(dto.Comment))
-            throw new ValidationException("Comment is required.");
-
-        if (dto.Comment.Length > 1000)
-            throw new ValidationException("Comment cannot exceed 1000 characters.");
-
-        if (dto.Rating < 1 || dto.Rating > 10)
-            throw new ValidationException("Rating must be between 1 and 10.");
-
-        if (dto.MovieId <= 0)
-            throw new ValidationException("Invalid movie id.");
-
         var review = new Review
         {
             Comment = dto.Comment,
@@ -84,15 +72,6 @@ public class ReviewService : IReviewService
         if (review.UserId != userId)
             throw new UnauthorizedAccessException("You can only update your own reviews.");
 
-        if (string.IsNullOrWhiteSpace(dto.Comment))
-            throw new ValidationException("Comment is required.");
-
-        if (dto.Comment.Length > 1000)
-            throw new ValidationException("Comment cannot exceed 1000 characters.");
-
-        if (dto.Rating < 1 || dto.Rating > 10)
-            throw new ValidationException("Rating must be between 1 and 10.");
-
         review.Comment = dto.Comment;
         review.Rating = dto.Rating;
         review.UpdatedAt = DateTime.UtcNow;
@@ -111,9 +90,6 @@ public class ReviewService : IReviewService
 
     public async Task<bool> DeleteReviewAsync(string userId, long reviewId)
     {
-        if (reviewId <= 0)
-            throw new ValidationException("Invalid review id.");
-
         var review = await _reviewRepository.GetByIdAsync(reviewId);
         if (review == null)
             throw new ValidationException("Review not found.");

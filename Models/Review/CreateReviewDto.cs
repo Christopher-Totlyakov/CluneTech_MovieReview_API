@@ -13,9 +13,16 @@ namespace Models.Review;
 /// </summary>
 public class CreateReviewDto
 {
+    [Required(ErrorMessage = "Comment is required.")]
+    [StringLength(1000, ErrorMessage = "Comment cannot exceed 1000 characters.")]
     public string Comment { get; set; } = string.Empty;
 
+    [Range(1, 10, ErrorMessage = "Rating must be between 1 and 10.")]
     public int Rating { get; set; }
 
-    public long MovieId { get; set; }
+    [Range(1, long.MaxValue, ErrorMessage = "MovieId must be greater than 0.")]
+    public long? MovieId { get; set; }
+
+    [Range(1, long.MaxValue, ErrorMessage = "SeriesId must be greater than 0.")]
+    public long SeriesId { get; set; }
 }
