@@ -28,7 +28,12 @@ public class MovieService : IMovieService
             Id = m.Id,
             Title = m.Title,
             Description = m.Description,
-            ReleaseDate = m.ReleaseDate
+            Genre = m.Genre,
+            Director = m.Director,
+            ReleaseDate = m.ReleaseDate,
+            DurationMinutes = m.DurationMinutes,
+            AverageRating = m.AverageRating,
+            PosterUrl = m.PosterUrl
         });
     }
 
@@ -45,7 +50,12 @@ public class MovieService : IMovieService
             Id = movie.Id,
             Title = movie.Title,
             Description = movie.Description,
+            Genre = movie.Genre,
+            Director = movie.Director,
             ReleaseDate = movie.ReleaseDate,
+            DurationMinutes = movie.DurationMinutes,
+            AverageRating = movie.AverageRating,
+            PosterUrl = movie.PosterUrl,
             Reviews = movie.Reviews.Select(r => new ReviewDto
             {
                 Id = r.Id,
@@ -59,28 +69,17 @@ public class MovieService : IMovieService
 
     public async Task<MovieDto> CreateMovieAsync(CreateMovieDto dto)
     {
-
-        if (string.IsNullOrWhiteSpace(dto.Title))
-            throw new ValidationException("Title is required.");
-
-        if (dto.Title.Length > 200)
-            throw new ValidationException("Title cannot exceed 200 characters.");
-
-        if (!string.IsNullOrWhiteSpace(dto.Description) && dto.Description.Length > 1000)
-            throw new ValidationException("Description cannot exceed 1000 characters.");
-
-        if (dto.ReleaseDate == default)
-            throw new ValidationException("Release date is required.");
-
-        if (dto.ReleaseDate < new DateTime(1900, 1, 1))
-            throw new ValidationException("Release date is too far in the past.");
-
         var movie = new Movie
         {
             Title = dto.Title,
             Description = dto.Description,
-            ReleaseDate = dto.ReleaseDate
+            Genre = dto.Genre,
+            Director = dto.Director,
+            ReleaseDate = dto.ReleaseDate,
+            DurationMinutes = dto.DurationMinutes,
+            PosterUrl = dto.PosterUrl
         };
+
 
         await _movieRepository.CreateAsync(movie);
 
@@ -89,7 +88,11 @@ public class MovieService : IMovieService
             Id = movie.Id,
             Title = movie.Title,
             Description = movie.Description,
-            ReleaseDate = movie.ReleaseDate
+            Genre = movie.Genre,
+            Director = movie.Director,
+            ReleaseDate = movie.ReleaseDate,
+            DurationMinutes = movie.DurationMinutes,
+            PosterUrl = movie.PosterUrl
         };
     }
 
@@ -101,19 +104,13 @@ public class MovieService : IMovieService
         var movie = await _movieRepository.GetByIdAsync(id);
         if (movie == null) return false;
 
-
-        if (string.IsNullOrWhiteSpace(dto.Title))
-            throw new ValidationException("Title is required.");
-
-        if (dto.Title.Length > 200)
-            throw new ValidationException("Title cannot exceed 200 characters.");
-
-        if (!string.IsNullOrWhiteSpace(dto.Description) && dto.Description.Length > 1000)
-            throw new ValidationException("Description cannot exceed 1000 characters.");
-
         movie.Title = dto.Title;
         movie.Description = dto.Description;
+        movie.Genre = dto.Genre;
+        movie.Director = dto.Director;
         movie.ReleaseDate = dto.ReleaseDate;
+        movie.DurationMinutes = dto.DurationMinutes;
+        movie.PosterUrl = dto.PosterUrl;
 
         await _movieRepository.UpdateAsync(movie);
         return true;

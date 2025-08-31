@@ -15,7 +15,12 @@ public class MovieDto
     public long Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string Genre { get; set; } = string.Empty;
+    public string? Director { get; set; }
     public DateTime ReleaseDate { get; set; }
+    public int DurationMinutes { get; set; }
+    public double AverageRating { get; set; }
+    public string? PosterUrl { get; set; }
 
     public IEnumerable<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
 }
